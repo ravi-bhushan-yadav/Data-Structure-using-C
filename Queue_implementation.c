@@ -1,77 +1,87 @@
-class myQueue {
-    constructor(capacity) {
-     
-        //Maximum number of elements the queue can hold.
-        this.capacity = capacity;
-     
-          // Array to store queue elements.
-        this.arr = new Array(capacity);
-     
-          // Current number of elements in the queue.
-        this.size = 0;
-    }
+#include <stdio.h>
+#include <stdlib.h>
 
-    //Maximum number of elements the queue can hold.
-    isEmpty() {
-        return this.size === 0;
-    }
+struct myQueue {
+    // Array to store queue elements
+    int *arr;
 
-    // Check if full
-    isFull() {
-        return this.size === this.capacity;
-    }
+    // Maximum number of elements the queue can hold
+    int capacity;
 
-    // Enqueue
-    enqueue(x) {
-        if (this.isFull()) {
-            console.log("Queue is full!");
-            return;
-        }
-        this.arr[this.size] = x;
-        this.size++;
-    }
+    // Current number of elements in the queue
+    int size;
+};
 
-    // Dequeue
-    dequeue() {
-        if (this.isEmpty()) {
-            console.log("Queue is empty!");
-            return;
-        }
-        for (let i = 1; i < this.size; i++) {
-            this.arr[i - 1] = this.arr[i];
-        }
-        this.size--;
-    }
-
-    // Get front element
-    getFront() {
-        if (this.isEmpty()) {
-            console.log("Queue is empty!");
-            return -1;
-        }
-        return this.arr[0];
-    }
-    
-     // Get rear element
-    getRear() {
-        if (this.isEmpty()) {
-            console.log("Queue is empty!");
-            return -1;
-        }
-        return this.arr[this.size - 1];
-    }
+// Create queue
+struct myQueue* createQueue(int capacity) {
+    struct myQueue* q = (struct myQueue*)malloc(sizeof(struct myQueue));
+    q->capacity = capacity;
+    q->size = 0;
+    q->arr = (int*)malloc(capacity * sizeof(int));
+    return q;
 }
 
-//Driver Code
-let q = new myQueue(3);
+int isEmpty(struct myQueue* q) {
+    return q->size == 0;
+}
 
-q.enqueue(10);
-q.enqueue(20);
-q.enqueue(30);
-console.log("Front:", q.getFront());  
+int isFull(struct myQueue* q) {
+    return q->size == q->capacity;
+}
 
-q.dequeue();
-console.log("Front:", q.getFront()); 
-console.log("Rear:", q.getRear()); 
+// Adds an element x at the rear of the queue
+void enqueue(struct myQueue* q, int x) {
+    if (isFull(q)) {
+        printf("Queue is full!\n");
+        return;
+    }
+    q->arr[q->size] = x;
+    q->size++;
+}
 
-q.enqueue(40);
+// Removes the front element of the queue
+void dequeue(struct myQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty!\n");
+        return;
+    }
+    for (int i = 1; i < q->size; i++) {
+        q->arr[i - 1] = q->arr[i];
+    }
+    q->size--;
+}
+
+// Returns the front element of the queue
+int getFront(struct myQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty!\n");
+        return -1;
+    }
+    return q->arr[0];
+}
+
+// Returns the last element of the queue
+int getRear(struct myQueue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty!\n");
+        return -1;
+    }
+    return q->arr[q->size - 1];
+}
+
+int main() {
+    struct myQueue* q = createQueue(3);
+
+    enqueue(q, 10);
+    enqueue(q, 20);
+    enqueue(q, 30);
+    printf("Front: %d\n", getFront(q)); 
+
+    dequeue(q);
+    printf("Front: %d\n", getFront(q));
+    printf("Rear: %d\n", getRear(q));
+
+    enqueue(q, 40);
+
+    return 0;
+}
